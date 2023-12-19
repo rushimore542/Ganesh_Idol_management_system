@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+<head>
+<script src="./assets/js/j.js"></script>
+  <title>Ganesh Idol Project</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+</head>
+<style>
+  .result{
+    background-color: green;
+    color:#fff;
+    padding:20px;
+    
+    
+  }
+  .row{
+    display:flex;
+    margin-left:20px;
+    margin-right:20px;
+    margin-top:20px;
+    margin-bottom:20px;
+  }
+
+  .body{
+    margin-top:30px;
+  margin-left:30px;
+  margin-right:30px;
+  margin-bottom:30px;
+  }
+  
+</style>
+<body>
+<div class="row">
+  <div class=" col-sm-12 col-md-6 col-lg-6 ">
+    <div style="width:500px;padding:30px;margin-left:30px" id="reader"></div>
+  </div>
+  <div class="col-sm-12 col-md-6 col-lg-6 " style="padding:30px;">
+    <h4 style="text-align:center">SCAN RESULT</h4>
+    <div id="result">Result Here</div>
+  </div>
+</div>
+<div id="orderdata" >
+
+
+</div>
+<div id="acceptresult">
+
+
+<script type="text/javascript">
+function onScanSuccess(qrCodeMessage) {
+    document.getElementById('result').innerHTML = '<span class="result">'+qrCodeMessage+'</span>';
+    SendToServer(qrCodeMessage);
+}
+function onScanError(errorMessage) {
+  //handle scan error
+}
+var html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader", { fps: 10, qrbox: 250 });
+html5QrcodeScanner.render(onScanSuccess, onScanError);
+
+function SendToServer(qrCodeMessage) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+        	 document.getElementById('orderdata').innerHTML = this.responseText;
+             alert(this.responseText+"hi sagar");
+         }
+    };
+    xhttp.open("POST", "./QRCodeReaerServlet", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(qrCodeMessage);
+}
+
+function acceptIdol(idolid) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+        	 document.getElementById('acceptresult').innerHTML = this.responseText;
+             alert(this.responseText+"hi sagar");
+         }
+    };
+    xhttp.open("POST", "./AcceptIdol", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(idolid);
+}
+
+</script>
+</body>
+</html>
